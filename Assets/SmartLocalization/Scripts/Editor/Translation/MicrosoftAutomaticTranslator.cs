@@ -19,6 +19,7 @@ namespace SmartLocalization.Editor
     using System.Xml;
     using UnityEditor;
     using System.Text;
+    using UnityEngine.Networking;
 
     [System.Serializable]
 internal class AdmAccessToken
@@ -257,7 +258,7 @@ public class MicrosoftAutomaticTranslator : IAutomaticTranslator
 
 		Debug.Log("Translating key:" + key + ", from:" + languageFrom + ", to:" + languageTo);
 
-		string url = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text=" + WWW.EscapeURL(EscapeLinebreaks(textToTranslate)) + "&from=" + languageFrom + "&to=" + languageTo;
+		string url = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text=" + UnityWebRequest.EscapeURL(EscapeLinebreaks(textToTranslate)) + "&from=" + languageFrom + "&to=" + languageTo;
 	   	WebRequest translationWebRequest = HttpWebRequest.Create(url);
 	    translationWebRequest.Headers["Authorization"] = headerValue;
 		
@@ -347,8 +348,8 @@ public class MicrosoftAutomaticTranslator : IAutomaticTranslator
 
 	void PrepareAuthenticationRequest(IAsyncResult asyncResult)
 	{
-		string requestDetails = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com", 
-											WWW.EscapeURL(clientID), WWW.EscapeURL(clientSecret));	
+		string requestDetails = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com",
+                                            UnityWebRequest.EscapeURL(clientID), UnityWebRequest.EscapeURL(clientSecret));	
 		
 		 HttpWebRequest request = (HttpWebRequest)asyncResult.AsyncState;
 		

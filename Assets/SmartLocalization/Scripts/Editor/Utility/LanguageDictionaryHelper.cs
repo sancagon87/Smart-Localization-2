@@ -88,6 +88,7 @@ public static class LanguageDictionaryHelper
 			Debug.LogWarning("Duplicate keys in dictionary was found! - renaming key:" + desiredKey + " to:" + (desiredKey + count));
 			return (desiredKey + count);
 		}
-	}	
-}
+	}
+
+    }
 }//namespace SmartLocalization.Editor

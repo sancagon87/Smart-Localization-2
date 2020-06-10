@@ -125,6 +125,7 @@ public class EditRootLanguageFileWindow : EditorWindow
 		settingsList.Add("CONVERTLINEBREAK");
 		settingsList.Add("GENERAL");
 		settingsList.Add("SEARCH");
+		settingsList.Add("IMPORT");
 
 		settingsAdaptor = new SettingsListAdaptor(settingsList,DrawSettingsItem, 20);
 		settingsContextMenu = new SettingsMenuControl();
@@ -195,44 +196,52 @@ public class EditRootLanguageFileWindow : EditorWindow
 		Initialize();
 	}
 
-	string DrawSettingsItem(Rect position, string item)
-	{
-		float fullWindowWidth = position.width + 30;
-		Rect newPosition = position;
-		newPosition.width = fullWindowWidth * 0.99f;
+        string DrawSettingsItem(Rect position, string item)
+        {
+            float fullWindowWidth = position.width + 30;
+            Rect newPosition = position;
+            newPosition.width = fullWindowWidth * 0.99f;
 
-		if(item == "GENERAL")
-		{
-			bool collapse = EditorGUI.Toggle(newPosition, "Collapse multiline fields", collapseMultilineFields);
+            if (item == "GENERAL")
+            {
+                bool collapse = EditorGUI.Toggle(newPosition, "Collapse multiline fields", collapseMultilineFields);
 
-			if(collapse != collapseMultilineFields)
-			{
-				collapseMultilineFields = collapse;
-				localizedObjectAdaptor.collapseMultiline = collapse;
+                if (collapse != collapseMultilineFields)
+                {
+                    collapseMultilineFields = collapse;
+                    localizedObjectAdaptor.collapseMultiline = collapse;
 
-				EditorPrefs.SetBool(CollapseMultilineSaveKey, collapseMultilineFields);
-			}
-		}
-		else if(item == "SEARCH")
-		{
-			newPosition.width = fullWindowWidth * 0.69f;
-			searchText = EditorGUI.TextField(newPosition, "Search", searchText);
-			newPosition.x += fullWindowWidth * 0.7f;
-			newPosition.width = fullWindowWidth * 0.29f;
-			searchType = (LanguageSearchType)EditorGUI.EnumPopup(newPosition, searchType);
+                    EditorPrefs.SetBool(CollapseMultilineSaveKey, collapseMultilineFields);
+                }
+            }
+            else if (item == "SEARCH")
+            {
+                newPosition.width = fullWindowWidth * 0.69f;
+                searchText = EditorGUI.TextField(newPosition, "Search", searchText);
+                newPosition.x += fullWindowWidth * 0.7f;
+                newPosition.width = fullWindowWidth * 0.29f;
+                searchType = (LanguageSearchType)EditorGUI.EnumPopup(newPosition, searchType);
 
-			localizedObjectAdaptor.SearchType = searchType;
-			localizedObjectAdaptor.SearchLine = searchText;
-		}
-		else if(item == "CONVERTLINEBREAK")
-		{
-			if(GUI.Button(newPosition,@"Convert all '\n' into line breaks"))
-			{
-				OnConvertLinebreaksClick();
-			}
-		}
+                localizedObjectAdaptor.SearchType = searchType;
+                localizedObjectAdaptor.SearchLine = searchText;
+            }
+            else if (item == "CONVERTLINEBREAK")
+            {
+                if (GUI.Button(newPosition, @"Convert all '\n' into line breaks"))
+                {
+                    OnConvertLinebreaksClick();
+                }
+            }
+            else if (item == "IMPORT")
+            {
+                if (GUI.Button(newPosition, "Import Root Keys"))
+                {
+                    LanguageRootImport.ShowWindow(this);
+                }
+            }
 
-		return item;
+
+            return item;
 	}
 
 	SerializableLocalizationObjectPair DrawRootPair(Rect position, SerializableLocalizationObjectPair item)
@@ -392,6 +401,25 @@ public class EditRootLanguageFileWindow : EditorWindow
 		changedRootKeys.Add(new SerializableStringPair(addedKey, addedKey));
 		changedRootValues[addedIndex] = new SerializableLocalizationObjectPair(addedKey, copyObject);
 	}
+
+    public void AddKey(string key, string value)
+    {
+        if (parsedRootValues.ContainsKey(key))
+            return;
+
+        LocalizedObject dummyObject = new LocalizedObject();
+        dummyObject.ObjectType = LocalizedObjectType.STRING;
+        dummyObject.TextValue = key;
+
+        string addedKey = LanguageDictionaryHelper.AddNewKeyPersistent(parsedRootValues, key, dummyObject);
+
+        LocalizedObject copyObject = new LocalizedObject();
+        copyObject.ObjectType = LocalizedObjectType.STRING;
+        copyObject.TextValue = value;
+
+        changedRootKeys.Add(new SerializableStringPair(addedKey, addedKey));
+        changedRootValues.Add(new SerializableLocalizationObjectPair(addedKey, copyObject));
+    }
 
 #endregion
 

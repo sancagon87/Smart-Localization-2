@@ -567,9 +567,9 @@ public class LanguageManager : MonoBehaviour, ISerializationCallbackReceiver
 	/// Returns a texture in the current language for the key with plural forms. Returns null if nothing is found.
 	/// </summary>
 	/// <returns>The texture.</returns>
-	public Texture GetTexture(string key, int count)
+	public Sprite GetTexture(string key, int count)
 	{
-		return GetTexture(PluralForms.GetPluralKey(languageDataHandler.LoadedCulture.languageCode, key, count));
+		return GetSprite(PluralForms.GetPluralKey(languageDataHandler.LoadedCulture.languageCode, key, count));
 	}
 	
 	/// <summary>
@@ -621,9 +621,9 @@ public class LanguageManager : MonoBehaviour, ISerializationCallbackReceiver
 	/// Returns a texture in the current language for the key with a custom plural form. Returns null if nothing is found.
 	/// </summary>
 	/// <returns>The texture.</returns>
-	public Texture GetTexture(string key, int count, Func<int, int> pluralForm)
+	public Sprite GetTexture(string key, int count, Func<int, int> pluralForm)
 	{
-		return GetTexture(PluralForms.GetPluralKey(key, count, pluralForm));
+		return GetSprite(PluralForms.GetPluralKey(key, count, pluralForm));
 	}
 	
 	/// <summary>
@@ -660,9 +660,9 @@ public class LanguageManager : MonoBehaviour, ISerializationCallbackReceiver
 	/// <summary>
 	/// Gets a texture for the current language, returns null if nothing is found
 	/// </summary>
-	public Texture GetTexture(string key)
+	public Sprite GetSprite(string key)
 	{
-		return languageDataHandler.GetAsset<Texture>(key);
+		return languageDataHandler.GetAsset<Sprite>(key);
 	}
 
 	/// <summary>

@@ -580,8 +580,8 @@ public static class LanguageHandlerEditor
 		else{
 			string relativePath = filePath + "/" + newFileName + fileExtension;
 			relativePath = "Assets" + relativePath.Substring(Application.dataPath.Length);
-			PrefabUtility.CreatePrefab(relativePath, objectToCopy.ThisGameObject);
-		}
+			PrefabUtility.SaveAsPrefabAsset(objectToCopy.ThisGameObject, relativePath);
+        }
 
 		return AssetDatabase.AssetPathToGUID(currentAssetPath);
 	}
